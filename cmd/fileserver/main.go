@@ -4,10 +4,18 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 )
 
 func main() {
-	fs := http.FileServer(http.Dir("static"))
-	fmt.Println("Listening on http://localhost:8080")
-	log.Fatal(http.ListenAndServe(":8080", fs))
+	if len(os.Args) != 3 {
+		fmt.Println("Usage: <http-dir> <port>")
+		os.Exit(1)
+	}
+
+	httpDir := os.Args[1]
+	port := os.Args[2]
+	fs := http.FileServer(http.Dir(httpDir))
+	fmt.Printf("Listening on http://localhost:%s", port)
+	log.Fatal(http.ListenAndServe(":"+port, fs))
 }
